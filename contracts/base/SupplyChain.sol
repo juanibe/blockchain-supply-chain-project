@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-contract SupplyChain{
+contract SupplyChain {
 
-    address owner;
+    // address owner;
 
     // Define a variable called 'upc' for Universal Product Code (UPC)
     uint upc;
@@ -41,19 +41,21 @@ contract SupplyChain{
     }
 
         // Define events
-        event MaterialsSelected(uint sku);
-        event Processed(uint upc);
-        event Packed(uint upc);
+        event MaterialsSelected(uint upc);
+        event Shaped(uint upc);
+        event Built(uint upc);
+        event QualityControlled(uint upc);
         event ForSale(uint upc);
         event Sold(uint upc);
         event Shipped(uint upc);
         event Received(uint upc);
         event Purchased(uint upc);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
+
+    // modifier onlyOwner() {
+    //     require(msg.sender == owner);
+    //     _;
+    // }
 
       // Define a modifer that verifies the Caller
     modifier verifyCaller (address _address) {
@@ -125,13 +127,13 @@ contract SupplyChain{
     // In the constructor set 'owner' to the address that instantiated the contract
     // and set 'sku' and 'upc' to 1
     constructor(){
-        owner = msg.sender;
+        // owner = msg.sender;
         sku = 1;
         upc = 1;
     }
 
     // Define a function 'collectMaterials' that allows a producer to set the state as material collected
-    function collectMaterials(address _originProducerId, string memory _originProducerName, string memory _originProducerInformation, uint _productId, string memory _productNotes, uint _productPrice) public 
+    function collectMaterials(string memory _originProducerName, string memory _originProducerInformation, string memory _productNotes, uint _productPrice) public 
     {
         items[sku] = Item(
             {
@@ -145,7 +147,7 @@ contract SupplyChain{
                 productNotes: _productNotes, 
                 productPrice: _productPrice, 
                 itemState: State.MaterialSelection, 
-                consumerID: address(0)
+                consumerID: payable(address(0))
             });
 
         emit MaterialsSelected(sku);
@@ -153,5 +155,10 @@ contract SupplyChain{
         sku = sku + 1;
 
         upc = upc + 1;
+    }
+
+    function shapeItem(uint _upc) public areMaterialsSelected(_upc) {
+        items[_upc].itemState = State.Shaped;
+        emit Shaped(_upc);
     }
 }
