@@ -924,7 +924,7 @@
   "sourceMap": "89:1595:2:-:0;;;513:55;;;;;;;;;;537:24;550:10;537:12;;;:24;;:::i;:::-;89:1595;;1315:124;1373:22;1387:7;1373:9;:13;;;;;;:22;;;;:::i;:::-;1424:7;1410:22;;;;;;;;;;;;1315:124;:::o;284:167:3:-;375:1;356:21;;:7;:21;;;348:30;;;;;;393:18;397:4;403:7;393:3;;;:18;;:::i;:::-;392:19;384:28;;;;;;442:4;419;:11;;:20;431:7;419:20;;;;;;;;;;;;;;;;:27;;;;;;;;;;;;;;;;;;284:167;;:::o;765:166::-;849:4;890:1;871:21;;:7;:21;;;863:30;;;;;;906:4;:11;;:20;918:7;906:20;;;;;;;;;;;;;;;;;;;;;;;;;899:27;;765:166;;;;:::o;89:1595:2:-;;;;;;;",
   "deployedSourceMap": "89:1595:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;974:96;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;801:110;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;1140:79;;;:::i;:::-;;974:96;699:22;710:10;699;:22::i;:::-;691:31;;;;;;1042:21:::1;1055:7;1042:12;:21::i;:::-;974:96:::0;:::o;801:110::-;859:4;882:22;896:7;882:9;:13;;:22;;;;:::i;:::-;875:29;;801:110;;;:::o;1140:79::-;1185:27;1201:10;1185:15;:27::i;:::-;1140:79::o;284:167:3:-;375:1;356:21;;:7;:21;;;348:30;;;;;;393:18;397:4;403:7;393:3;:18::i;:::-;392:19;384:28;;;;;;442:4;419;:11;;:20;431:7;419:20;;;;;;;;;;;;;;;;:27;;;;;;;;;;;;;;;;;;284:167;;:::o;1315:124:2:-;1373:22;1387:7;1373:9;:13;;:22;;;;:::i;:::-;1424:7;1410:22;;;;;;;;;;;;1315:124;:::o;765:166:3:-;849:4;890:1;871:21;;:7;:21;;;863:30;;;;;;906:4;:11;;:20;918:7;906:20;;;;;;;;;;;;;;;;;;;;;;;;;899:27;;765:166;;;;:::o;1550:132:2:-;1611:25;1628:7;1611:9;:16;;:25;;;;:::i;:::-;1667:7;1651:24;;;;;;;;;;;;1550:132;:::o;517:170:3:-;611:1;592:21;;:7;:21;;;584:30;;;;;;628:18;632:4;638:7;628:3;:18::i;:::-;620:27;;;;;;677:5;654:4;:11;;:20;666:7;654:20;;;;;;;;;;;;;;;;:28;;;;;;;;;;;;;;;;;;517:170;;:::o;88:117:5:-;197:1;194;187:12;334:126;371:7;411:42;404:5;400:54;389:65;;334:126;;;:::o;466:96::-;503:7;532:24;550:5;532:24;:::i;:::-;521:35;;466:96;;;:::o;568:122::-;641:24;659:5;641:24;:::i;:::-;634:5;631:35;621:63;;680:1;677;670:12;621:63;568:122;:::o;696:139::-;742:5;780:6;767:20;758:29;;796:33;823:5;796:33;:::i;:::-;696:139;;;;:::o;841:329::-;900:6;949:2;937:9;928:7;924:23;920:32;917:119;;;955:79;;:::i;:::-;917:119;1075:1;1100:53;1145:7;1136:6;1125:9;1121:22;1100:53;:::i;:::-;1090:63;;1046:117;841:329;;;;:::o;1176:90::-;1210:7;1253:5;1246:13;1239:21;1228:32;;1176:90;;;:::o;1272:109::-;1353:21;1368:5;1353:21;:::i;:::-;1348:3;1341:34;1272:109;;:::o;1387:210::-;1474:4;1512:2;1501:9;1497:18;1489:26;;1525:65;1587:1;1576:9;1572:17;1563:6;1525:65;:::i;:::-;1387:210;;;;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nimport \"./Roles.sol\";\n\ncontract ProducerRole {\n    /** using is used for including a library within a contract in solidity */\n    using Roles for Roles.Role;\n\n    // Define 2 events, one for Adding, and other for Removing\n    event ProducerAdded(address indexed account);\n    event ProducerRemoved(address indexed account);\n\n    // Define a struct 'producers' by inheriting from 'Roles' library, struct Role\n    Roles.Role private producers;\n\n    constructor() {\n        _addProducer(msg.sender);\n    }\n\n    // Define a modifier that checks to see if msg.sender has the appropriate role\n    modifier onlyProducer() {\n        require(isProducer(msg.sender));\n        _;\n    }\n\n    // Define a function 'isFarmer' to check this role\n    function isProducer(address account) public view returns (bool) {\n        return producers.has(account);\n    }\n\n    // Define a function 'addFarmer' that adds this role\n    function addProducer(address account) public onlyProducer {\n        _addProducer(account);\n    }\n\n    // Define a function 'renounceFarmer' to renounce this role\n    function renounceProducer() public {\n        _removeProducer(msg.sender);\n    }\n\n    // Define an internal function '_addProducer' to add this role, called by 'addFarmer'\n    function _addProducer(address account) internal {\n        producers.add(account);\n        emit ProducerAdded(account);\n    }\n\n      // Define an internal function '_removeProducer' to remove this role, called by 'renounceProducer'\n    function _removeProducer(address account) internal {\n        producers.remove(account);\n        emit ProducerRemoved(account);\n    }\n}\n",
-  "sourcePath": "/Users/juani/code/courses/udacity_blockchain_developer/supply-chain/final_project/final_project_supply_chain/contracts/access-control/ProducerRol.sol",
+  "sourcePath": "/Users/juani/code/courses/udacity_blockchain_developer/supply-chain/final_project/blockchain-supply-chain-project/contracts/access-control/ProducerRol.sol",
   "ast": {
     "absolutePath": "project:/contracts/access-control/ProducerRol.sol",
     "exportedSymbols": {
@@ -2137,27 +2137,15 @@
     "version": "0.8.14+commit.80d49f37.Emscripten.clang"
   },
   "networks": {
-    "1657641458691": {
+    "1659260779412": {
       "events": {},
       "links": {},
-      "address": "0x65D8bBE5324Fa85E2f149e3dDf1aF61AE6856F00",
-      "transactionHash": "0x639d5618752b4d2d86ee24c908d4319057f9ccbe1b2f72f214d6228d024b4093"
-    },
-    "1658096994819": {
-      "events": {},
-      "links": {},
-      "address": "0xF844FC432449E191fAB51fDaA4683E35E7EAA346",
-      "transactionHash": "0xc2d3d1693b6919b4b46912c65411faebf6a8ddc63eb2593a6ce05f0de52e30f2"
-    },
-    "1658759110666": {
-      "events": {},
-      "links": {},
-      "address": "0xa39c3d9c7dAC44865ddc1bF69751ec1177D73FE6",
-      "transactionHash": "0xdb1bfafdfebec64001e75f6132b9cd90177ccd11f0f21be97ec7a976a32ec087"
+      "address": "0x7797352b8d88F37d68dbEE1561755966Adb0b670",
+      "transactionHash": "0x1e6002954ba13e95c1ed36cda2ff282604d2375fbdb8c972229ca536fc363671"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-07-25T14:31:43.239Z",
+  "updatedAt": "2022-07-31T11:26:53.481Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

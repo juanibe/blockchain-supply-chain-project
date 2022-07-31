@@ -6,15 +6,13 @@ App = {
   upc: 0,
   metamaskAccountID: "0x0000000000000000000000000000000000000000",
   ownerID: "0x0000000000000000000000000000000000000000",
-  originFarmerID: "0x0000000000000000000000000000000000000000",
-  originFarmName: null,
-  originFarmInformation: null,
-  originFarmLatitude: null,
-  originFarmLongitude: null,
+  originProducerID: "0x0000000000000000000000000000000000000000",
+  originProducerName: null,
+  originProducerInformation: null,
+  productId: null,
   productNotes: null,
-  productPrice: 0,
-  distributorID: "0x0000000000000000000000000000000000000000",
-  retailerID: "0x0000000000000000000000000000000000000000",
+  productPrice: null,
+  itemState: null,
   consumerID: "0x0000000000000000000000000000000000000000",
 
   init: async function () {
@@ -24,43 +22,22 @@ App = {
   },
 
   readForm: function () {
+    console.log($("#sku").val(), "HERE!");
     App.sku = $("#sku").val();
     App.upc = $("#upc").val();
     App.ownerID = $("#ownerID").val();
-    App.originFarmerID = $("#originFarmerID").val();
-    App.originFarmName = $("#originFarmName").val();
-    App.originFarmInformation = $("#originFarmInformation").val();
-    App.originFarmLatitude = $("#originFarmLatitude").val();
-    App.originFarmLongitude = $("#originFarmLongitude").val();
+    App.originProducerID = $("#originFarmerID").val();
+    App.originProducerName = $("#originFarmName").val();
+    App.originProducerInformation = $("#originFarmInformation").val();
     App.productNotes = $("#productNotes").val();
     App.productPrice = $("#productPrice").val();
-    App.distributorID = $("#distributorID").val();
-    App.retailerID = $("#retailerID").val();
     App.consumerID = $("#consumerID").val();
-
-    console.log(
-      App.sku,
-      App.upc,
-      App.ownerID,
-      App.originFarmerID,
-      App.originFarmName,
-      App.originFarmInformation,
-      App.originFarmLatitude,
-      App.originFarmLongitude,
-      App.productNotes,
-      App.productPrice,
-      App.distributorID,
-      App.retailerID,
-      App.consumerID
-    );
   },
 
   initWeb3: async function () {
     /// Find or Inject Web3 Provider
     /// Modern dapp browsers...
-    console.log(window);
     if (window.ethereum) {
-      console.log("ENTERS");
       App.web3Provider = window.ethereum;
       try {
         // Request account access
@@ -72,7 +49,6 @@ App = {
     }
     // Legacy dapp browsers...
     else if (window.web3) {
-      console.log("ENTERS IN HERE");
       App.web3Provider = window.web3.currentProvider;
     }
     // If no injected web3 instance is detected, fall back to Ganache
@@ -107,7 +83,6 @@ App = {
 
     /// JSONfy the smart contracts
     $.getJSON(jsonSupplyChain, function (data) {
-      console.log("data", data);
       var SupplyChainArtifact = data;
       App.contracts.SupplyChain = TruffleContract(SupplyChainArtifact);
       App.contracts.SupplyChain.setProvider(App.web3Provider);
@@ -130,11 +105,10 @@ App = {
     App.getMetaskAccountID();
 
     var processId = parseInt($(event.target).data("id"));
-    console.log("processId", processId);
-
+    console.log("in other", processId);
     switch (processId) {
       case 1:
-        return await App.harvestItem(event);
+        return await App.collectMaterials(event);
         break;
       case 2:
         return await App.processItem(event);
@@ -166,27 +140,32 @@ App = {
     }
   },
 
-  harvestItem: function (event) {
+  collectMaterials: function (event) {
     event.preventDefault();
+
     var processId = parseInt($(event.target).data("id"));
+
+    const originProducerName = document.getElementById("producer-name").value; // const sku = $("#sku").val()
+    const originProducerInformation =
+      document.getElementById("producer-info").value;
+    const productNotes = document.getElementById("product-notes");
+    const productPrice = document.getElementById("product-price");
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
-        return instance.harvestItem(
-          App.upc,
-          App.metamaskAccountID,
-          App.originFarmName,
-          App.originFarmInformation,
-          App.originFarmLatitude,
-          App.originFarmLongitude,
-          App.productNotes
+        return instance.collectMaterials(
+          originProducerName,
+          originProducerInformation,
+          productNotes,
+          parseInt(productPrice)
         );
       })
       .then(function (result) {
-        $("#ftc-item").text(result);
-        console.log("harvestItem", result);
+        console.log("RESULT", result);
+        $("#collect").text(result);
       })
       .catch(function (err) {
+        console.log(err, "error complete");
         console.log(err.message);
       });
   },

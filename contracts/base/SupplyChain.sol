@@ -133,7 +133,12 @@ contract SupplyChain {
     }
 
     // Define a function 'collectMaterials' that allows a producer to set the state as material collected
-    function collectMaterials(string memory _originProducerName, string memory _originProducerInformation, string memory _productNotes, uint _productPrice) public 
+    function collectMaterials(
+        string memory _originProducerName, 
+        string memory _originProducerInformation, 
+        string memory _productNotes, 
+        uint _productPrice
+        ) public 
     {
         items[sku] = Item(
             {

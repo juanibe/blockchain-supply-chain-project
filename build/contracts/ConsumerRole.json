@@ -924,7 +924,7 @@
   "sourceMap": "89:873:1:-:0;;;288:15;;;;;;;;;;89:873;;;;;;",
   "deployedSourceMap": "89:873:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;512:96;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;614:79;;;:::i;:::-;;398:108;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;512:96;351:22;362:10;351;:22::i;:::-;342:32;;;;;;580:21:::1;593:7;580:12;:21::i;:::-;512:96:::0;:::o;614:79::-;659:27;675:10;659:15;:27::i;:::-;614:79::o;398:108::-;455:4;477:22;491:7;477:9;:13;;:22;;;;:::i;:::-;470:29;;398:108;;;:::o;699:123::-;756:22;770:7;756:9;:13;;:22;;;;:::i;:::-;807:7;793:22;;;;;;;;;;;;699:123;:::o;828:132::-;889:25;906:7;889:9;:16;;:25;;;;:::i;:::-;945:7;929:24;;;;;;;;;;;;828:132;:::o;765:166:3:-;849:4;890:1;871:21;;:7;:21;;;863:30;;;;;;906:4;:11;;:20;918:7;906:20;;;;;;;;;;;;;;;;;;;;;;;;;899:27;;765:166;;;;:::o;284:167::-;375:1;356:21;;:7;:21;;;348:30;;;;;;393:18;397:4;403:7;393:3;:18::i;:::-;392:19;384:28;;;;;;442:4;419;:11;;:20;431:7;419:20;;;;;;;;;;;;;;;;:27;;;;;;;;;;;;;;;;;;284:167;;:::o;517:170::-;611:1;592:21;;:7;:21;;;584:30;;;;;;628:18;632:4;638:7;628:3;:18::i;:::-;620:27;;;;;;677:5;654:4;:11;;:20;666:7;654:20;;;;;;;;;;;;;;;;:28;;;;;;;;;;;;;;;;;;517:170;;:::o;88:117:5:-;197:1;194;187:12;334:126;371:7;411:42;404:5;400:54;389:65;;334:126;;;:::o;466:96::-;503:7;532:24;550:5;532:24;:::i;:::-;521:35;;466:96;;;:::o;568:122::-;641:24;659:5;641:24;:::i;:::-;634:5;631:35;621:63;;680:1;677;670:12;621:63;568:122;:::o;696:139::-;742:5;780:6;767:20;758:29;;796:33;823:5;796:33;:::i;:::-;696:139;;;;:::o;841:329::-;900:6;949:2;937:9;928:7;924:23;920:32;917:119;;;955:79;;:::i;:::-;917:119;1075:1;1100:53;1145:7;1136:6;1125:9;1121:22;1100:53;:::i;:::-;1090:63;;1046:117;841:329;;;;:::o;1176:90::-;1210:7;1253:5;1246:13;1239:21;1228:32;;1176:90;;;:::o;1272:109::-;1353:21;1368:5;1353:21;:::i;:::-;1348:3;1341:34;1272:109;;:::o;1387:210::-;1474:4;1512:2;1501:9;1497:18;1489:26;;1525:65;1587:1;1576:9;1572:17;1563:6;1525:65;:::i;:::-;1387:210;;;;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nimport \"./Roles.sol\";\n\ncontract ConsumerRole {\n    using Roles for Roles.Role;\n\n    event ConsumerAdded(address indexed account);\n    event ConsumerRemoved(address indexed account);\n\n    Roles.Role private consumers;\n\n    constructor(){}\n\n    modifier onlyConsumer(){\n        require (isConsumer(msg.sender));\n        _;\n    }\n\n    function isConsumer(address account)public view returns (bool){\n        return consumers.has(account);\n    }\n\n    function addConsumer(address account) public onlyConsumer {\n        _addConsumer(account);\n    }\n\n    function renounceConsumer() public {\n        _removeProducer(msg.sender);\n    }\n\n    function _addConsumer(address account) internal{\n        consumers.add(account);\n        emit ConsumerAdded(account);\n    }\n\n    function _removeProducer(address account) internal {\n        consumers.remove(account);\n        emit ConsumerRemoved(account);\n    }\n}\n",
-  "sourcePath": "/Users/juani/code/courses/udacity_blockchain_developer/supply-chain/final_project/final_project_supply_chain/contracts/access-control/ConsumerRol.sol",
+  "sourcePath": "/Users/juani/code/courses/udacity_blockchain_developer/supply-chain/final_project/blockchain-supply-chain-project/contracts/access-control/ConsumerRol.sol",
   "ast": {
     "absolutePath": "project:/contracts/access-control/ConsumerRol.sol",
     "exportedSymbols": {
@@ -2069,27 +2069,15 @@
     "version": "0.8.14+commit.80d49f37.Emscripten.clang"
   },
   "networks": {
-    "1657641458691": {
+    "1659260779412": {
       "events": {},
       "links": {},
-      "address": "0x6C1Bb831063F468f13a9f9286FD65f6178D36845",
-      "transactionHash": "0x11b04fbcce9b6debe326c7581190d7c216da6786d30d3c6955b378326db9eef8"
-    },
-    "1658096994819": {
-      "events": {},
-      "links": {},
-      "address": "0x9949F9ab3c4308b212f3B85B843cf7d3602Ed89f",
-      "transactionHash": "0xa35360d5199f985b912f0b5a675f2a22071fdb20b50ce31b3c8bab56a562d4a4"
-    },
-    "1658759110666": {
-      "events": {},
-      "links": {},
-      "address": "0xc48491b7300Cc257E3180185F48488E76C8680E7",
-      "transactionHash": "0x1b79f274f6567a6a4e968807904221d2e6e608803f9835a8e4af4888bbc29567"
+      "address": "0x67c6ED7C6E50f6e99e80b08d12Df3BB17Dc0511d",
+      "transactionHash": "0x341ab08e9c8daf4c581d5d0a01113e644a76af6a54003afedd8e9653931ea407"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-07-25T14:31:43.241Z",
+  "updatedAt": "2022-07-31T11:26:53.482Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

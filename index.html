@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fair Trade Coffee</title>
+    <title>Guitar</title>
     <link
       href="https://fonts.googleapis.com/css?family=Roboto"
       rel="stylesheet"
@@ -13,12 +13,39 @@
 
   <body>
     <div class="container">
-      <h1 style="text-align: center">Fair Trade Coffee</h1>
+      <h1 style="text-align: center">Guitar Fair</h1>
       <hr />
       <p style="text-align: center">
-        Prove the authenticity of coffee using the Ethereum blockchain.
+        Prove the authenticity of your guitar using the Ethereum blockchain.
       </p>
     </div>
+
+    <!-- HERE STARTS SPECIFIC -->
+
+    <div id="collect">
+      <h2>Collect</h2>
+      <div class="form-group">
+        Producer name
+        <br />
+        <input class="input-field" id="producer-name" name="producer-name" />
+        <br />
+        Origin producer information
+        <input class="input-field" id="producer-info" name="producer-info" />
+        <br />
+        Product notes
+        <input class="input-field" id="product-notes" name="product-notes" />
+        <br />
+        Product price
+        <input class="input-field" id="product-price" name="product-price" />
+        <br />
+        <button class="btn-harvest" id="button" type="button" data-id="1">
+          Collect materials
+        </button>
+      </div>
+      <br />
+    </div>
+
+    <!-- HERE FINISHES SPECIFIC -->
 
     <div id="ftc-harvest">
       <h2>Product Overview</h2>
@@ -187,7 +214,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- <script src="js/web3.min.js"></script> -->
+    <script src="src/js/web3.min.js"></script>
     <script src="src/js/truffle-contract.js"></script>
     <script src="src/js/app.js"></script>
   </body>
