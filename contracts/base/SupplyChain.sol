@@ -136,9 +136,8 @@ contract SupplyChain {
     function collectMaterials(
         string memory _originProducerName, 
         string memory _originProducerInformation, 
-        string memory _productNotes, 
-        uint _productPrice
-        ) public 
+        string memory _productNotes
+        ) payable public 
     {
         items[sku] = Item(
             {
@@ -150,7 +149,7 @@ contract SupplyChain {
                 originProducerInformation: _originProducerInformation, 
                 productId: sku + upc, 
                 productNotes: _productNotes, 
-                productPrice: _productPrice, 
+                productPrice: msg.value, 
                 itemState: State.MaterialSelection, 
                 consumerID: payable(address(0))
             });
