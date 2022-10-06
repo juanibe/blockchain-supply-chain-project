@@ -29,25 +29,25 @@ contract("SupplyChain", function (accounts) {
     // Declare and Initialize a variable for event
     var eventEmitted = false;
 
-    var event = supplyChain.contract.events.MaterialsSelected();
-
-    await event.watch((err, res) => {
+    supplyChain.MaterialsSelected(null, (error, event) => {
       eventEmitted = true;
     });
 
+    console.log(productPrice, "PRODUCT PRICE");
+
     // Mark as Materials Selected
-    await supplyChain.collectMaterials(
-      sku,
-      upc,
-      ownerID,
-      originProducerID,
+    const item = await supplyChain.collectMaterials.call(
       originProducerName,
       originProducerInformation,
-      productId,
       productNotes,
-      productPrice,
-      itemState
+      productPrice
     );
+
+    console.log("ITEM", item);
+
+    const result = await supplyChain.getItem.call(1);
+
+    console.log(result);
   });
 
   //   // 1st Test

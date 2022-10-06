@@ -132,13 +132,31 @@ contract SupplyChain {
         upc = 1;
     }
 
+    function getItem(uint _upc) public view returns (
+        uint sku,
+        uint upc,
+        string memory productNotes
+    ) 
+    {
+       Item memory item = items[_upc];
+       return (
+        item.sku,
+        item.upc,
+        item.productNotes
+       );
+    }
+
+    
+
     // Define a function 'collectMaterials' that allows a producer to set the state as material collected
     function collectMaterials(
         string memory _originProducerName, 
         string memory _originProducerInformation, 
-        string memory _productNotes
+        string memory _productNotes,
+        uint _price
         ) payable public 
     {
+        
         items[sku] = Item(
             {
                 sku: sku, 
@@ -149,7 +167,7 @@ contract SupplyChain {
                 originProducerInformation: _originProducerInformation, 
                 productId: sku + upc, 
                 productNotes: _productNotes, 
-                productPrice: msg.value, 
+                productPrice: _price, 
                 itemState: State.MaterialSelection, 
                 consumerID: payable(address(0))
             });

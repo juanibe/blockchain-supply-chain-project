@@ -132,7 +132,7 @@ App = {
         return await App.purchaseItem(event);
         break;
       case 9:
-        return await App.fetchItemBufferOne(event);
+        return await App.fetchItem(event);
         break;
       case 10:
         return await App.fetchItemBufferTwo(event);
@@ -157,16 +157,35 @@ App = {
           originProducerName,
           originProducerInformation,
           productNotes,
-          parseInt(productPrice)
+          web3.toWei(productPrice, "ether")
         );
       })
       .then(function (result) {
-        console.log("RESULT", result);
         $("#collect").text(result);
       })
       .catch(function (err) {
         console.log(err, "error complete");
         console.log(err.message);
+      });
+  },
+
+  /** Retrieves an item */
+  fetchItem: function (event) {
+    console.log($(event.target));
+    const upc = document.getElementById("upc").value;
+
+    App.contracts.SupplyChain.deployed()
+      .then(async function (instance) {
+        const r = await instance.getItem(upc);
+        console.log("RESULT", r);
+        return r;
+      })
+      // .then(function (result) {
+      //   $("#ftc-item").text(result);
+      //   console.log("fetchItemBufferOne", result);
+      // })
+      .catch(function (err) {
+        console.log(err);
       });
   },
 
