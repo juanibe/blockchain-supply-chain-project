@@ -148,8 +148,8 @@ App = {
     const originProducerName = document.getElementById("producer-name").value; // const sku = $("#sku").val()
     const originProducerInformation =
       document.getElementById("producer-info").value;
-    const productNotes = document.getElementById("product-notes");
-    const productPrice = document.getElementById("product-price");
+    const productNotes = document.getElementById("product-notes").value;
+    const productPrice = document.getElementById("product-price").value;
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
@@ -157,7 +157,7 @@ App = {
           originProducerName,
           originProducerInformation,
           productNotes,
-          web3.toWei(productPrice, "ether")
+          web3.toWei(String(productPrice), "ether")
         );
       })
       .then(function (result) {
