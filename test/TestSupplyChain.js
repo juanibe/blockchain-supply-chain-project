@@ -34,8 +34,6 @@ contract("SupplyChain", function (accounts) {
       eventEmitted = true;
     });
 
-    console.log(productPrice, "PRODUCT PRICE");
-
     // Mark as Materials Selected
     await supplyChain.collectMaterials(
       originProducerName,
@@ -49,8 +47,13 @@ contract("SupplyChain", function (accounts) {
     assert.equal(result[0], sku, "Error: Invalid item SKU");
     assert.equal(result[1], upc, "Error: Invalid item UPC");
     assert.equal(result[2], productPrice, "Error: Invalid item price");
-    assert.equal(result[3], productNotes, "Error: Invalid product notes");
-    assert.equal(result[4], consumerID, "Error: Invalid consumer ID");
+    assert.equal(result[3], productNotes, "Error: Invalid item notes");
+    assert.equal(
+      result[4],
+      originProducerInformation,
+      "Error: Invalid producer information"
+    );
+    assert.equal(result[5], 0, "Error: Invalid product state");
   });
 
   //   // 1st Test

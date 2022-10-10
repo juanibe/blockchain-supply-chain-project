@@ -181,14 +181,7 @@ App = {
         return await instance.getItem(upc);
       })
       .then(function (result) {
-        console.log("0", result[0]);
-        console.log("1", result[1]);
-        console.log("2", result[2]);
-        console.log("3", result[3]);
-        console.log("4", result[4]);
-
         const priceToEther = web3.fromWei(result[2], "ether");
-
         let productState;
 
         switch (Number(result[5])) {
