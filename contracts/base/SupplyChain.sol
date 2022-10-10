@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract SupplyChain {
 
-    // address owner;
+    address owner;
 
     // Define a variable called 'upc' for Universal Product Code (UPC)
     uint upc;
@@ -52,10 +52,10 @@ contract SupplyChain {
         event Purchased(uint upc);
 
 
-    // modifier onlyOwner() {
-    //     require(msg.sender == owner);
-    //     _;
-    // }
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
 
       // Define a modifer that verifies the Caller
     modifier verifyCaller (address _address) {
@@ -127,7 +127,7 @@ contract SupplyChain {
     // In the constructor set 'owner' to the address that instantiated the contract
     // and set 'sku' and 'upc' to 1
     constructor(){
-        // owner = msg.sender;
+        owner = msg.sender;
         sku = 1;
         upc = 1;
     }
@@ -135,14 +135,20 @@ contract SupplyChain {
     function getItem(uint _upc) public view returns (
         uint sku,
         uint upc,
-        string memory productNotes
+        uint price,
+        string memory productNotes,
+        string memory originProducerInformation,
+        State itemState
     ) 
     {
        Item memory item = items[_upc];
        return (
         item.sku,
         item.upc,
-        item.productNotes
+        item.productPrice,
+        item.productNotes,
+        item.originProducerInformation,
+        item.itemState
        );
     }
 

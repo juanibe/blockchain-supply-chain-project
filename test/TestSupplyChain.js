@@ -14,7 +14,8 @@ contract("SupplyChain", function (accounts) {
   const productNotes = "Best wood for Guitar";
   const productPrice = web3.utils.toWei(String(1), "ether");
   var itemState = 0;
-  const consumerID = "0x00000000000000000000000000000000000000";
+  // const consumerID = "0x00000000000000000000000000000000000000";
+  const consumerID = "0x0000000000000000000000000000000000000000";
 
   console.log("ganache-cli accounts used here...");
   console.log("Contract Owner: accounts[0] ", accounts[0]);
@@ -36,18 +37,20 @@ contract("SupplyChain", function (accounts) {
     console.log(productPrice, "PRODUCT PRICE");
 
     // Mark as Materials Selected
-    const item = await supplyChain.collectMaterials.call(
+    await supplyChain.collectMaterials(
       originProducerName,
       originProducerInformation,
       productNotes,
       productPrice
     );
 
-    console.log("ITEM", item);
-
     const result = await supplyChain.getItem.call(1);
 
-    console.log(result);
+    assert.equal(result[0], sku, "Error: Invalid item SKU");
+    assert.equal(result[1], upc, "Error: Invalid item UPC");
+    assert.equal(result[2], productPrice, "Error: Invalid item price");
+    assert.equal(result[3], productNotes, "Error: Invalid product notes");
+    assert.equal(result[4], consumerID, "Error: Invalid consumer ID");
   });
 
   //   // 1st Test

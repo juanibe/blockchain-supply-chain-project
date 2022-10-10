@@ -143,9 +143,7 @@ App = {
   collectMaterials: function (event) {
     event.preventDefault();
 
-    var processId = parseInt($(event.target).data("id"));
-
-    const originProducerName = document.getElementById("producer-name").value; // const sku = $("#sku").val()
+    const originProducerName = document.getElementById("producer-name").value;
     const originProducerInformation =
       document.getElementById("producer-info").value;
     const productNotes = document.getElementById("product-notes").value;
@@ -157,11 +155,15 @@ App = {
           originProducerName,
           originProducerInformation,
           productNotes,
-          web3.toWei(String(productPrice), "ether")
+          web3.toWei(String(productPrice), "ether"),
+          { from: App.metamaskAccountID }
         );
       })
       .then(function (result) {
-        $("#collect").text(result);
+        $("#collected").text(
+          "Materials collected.",
+          result.receipt.transactionHash
+        );
       })
       .catch(function (err) {
         console.log(err, "error complete");
@@ -176,14 +178,33 @@ App = {
 
     App.contracts.SupplyChain.deployed()
       .then(async function (instance) {
-        const r = await instance.getItem(upc);
-        console.log("RESULT", r);
-        return r;
+        return await instance.getItem(upc);
       })
-      // .then(function (result) {
-      //   $("#ftc-item").text(result);
-      //   console.log("fetchItemBufferOne", result);
-      // })
+      .then(function (result) {
+        console.log("0", result[0]);
+        console.log("1", result[1]);
+        console.log("2", result[2]);
+        console.log("3", result[3]);
+        console.log("4", result[4]);
+
+        const priceToEther = web3.fromWei(result[2], "ether");
+
+        let productState;
+
+        switch (Number(result[5])) {
+          case 0:
+            productState = "Materials Selected";
+        }
+
+        console.log("5!!", Number(result[5]));
+
+        $("#get-sku").text("SKU: " + result[0]);
+        $("#get-upc").text("UPC: " + result[1]);
+        $("#get-price").text("PRICE: " + priceToEther + " ETH");
+        $("#get-notes").text("PRODUCT NOTES: " + result[3]);
+        $("#get-producer-info").text("PRODUCER INFORMATION: " + result[4]);
+        $("#get-state").text("PRODUCT STATE: " + productState);
+      })
       .catch(function (err) {
         console.log(err);
       });
