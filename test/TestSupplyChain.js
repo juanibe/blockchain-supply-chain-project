@@ -34,12 +34,16 @@ contract("SupplyChain", function (accounts) {
       eventEmitted = true;
     });
 
+    // Register a producer that will collect materials
+    await supplyChain.registerProducer(accounts[1]);
+
     // Mark as Materials Selected
     await supplyChain.collectMaterials(
       originProducerName,
       originProducerInformation,
       productNotes,
-      productPrice
+      productPrice,
+      { from: accounts[1] }
     );
 
     const result = await supplyChain.getItem.call(1);
@@ -54,6 +58,62 @@ contract("SupplyChain", function (accounts) {
       "Error: Invalid producer information"
     );
     assert.equal(result[5], 0, "Error: Invalid product state");
+  });
+
+  it("Testing smart contract function shapeItem() that allows the producer owner to shape the materials collected", async () => {
+    const supplyChain = await SupplyChain.deployed();
+
+    var eventEmitted = false;
+
+    supplyChain.Shaped(null, (error, event) => {
+      eventEmitted = true;
+    });
+
+    const item = await supplyChain.getItem.call(1);
+
+    await supplyChain.shapeItem(item[1], { from: accounts[1] });
+
+    const itemShaped = await supplyChain.getItem.call(1);
+
+    assert.equal(itemShaped[5], 1, "Error: Invalid product state");
+  });
+
+  it("Testing smart contract function buildItem() that allows the producer owner build the item", async () => {
+    const supplyChain = await SupplyChain.deployed();
+
+    var eventEmitted = false;
+
+    supplyChain.Built(null, (error, event) => {
+      eventEmitted = true;
+    });
+
+    const item = await supplyChain.getItem.call(1);
+
+    await supplyChain.buildItem(item[1], { from: accounts[1] });
+
+    const itemShaped = await supplyChain.getItem.call(1);
+
+    assert.equal(itemShaped[5], 2, "Error: Invalid product state");
+  });
+
+  it("Testing smart contract function qualityControl() that allows the qualityController to check the quality of the item", async () => {
+    const supplyChain = await SupplyChain.deployed();
+
+    var eventEmitted = false;
+
+    supplyChain.QualityControlled(null, (error, event) => {
+      eventEmitted = true;
+    });
+
+    await supplyChain.registerQualityController(accounts[2]);
+
+    const item = await supplyChain.getItem.call(1);
+
+    await supplyChain.controlQuality(item[1], { from: accounts[2] });
+
+    const itemShaped = await supplyChain.getItem.call(1);
+
+    assert.equal(itemShaped[5], 3, "Error: Invalid product state");
   });
 
   //   // 1st Test
