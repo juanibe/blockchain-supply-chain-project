@@ -111,10 +111,10 @@ App = {
         return await App.collectMaterials(event);
         break;
       case 2:
-        return await App.processItem(event);
+        return await App.shapeItem(event);
         break;
       case 3:
-        return await App.packItem(event);
+        return await App.buildItem(event);
         break;
       case 4:
         return await App.sellItem(event);
@@ -173,7 +173,6 @@ App = {
 
   /** Retrieves an item */
   fetchItem: function (event) {
-    console.log($(event.target));
     const upc = document.getElementById("upc").value;
 
     App.contracts.SupplyChain.deployed()
@@ -187,9 +186,14 @@ App = {
         switch (Number(result[5])) {
           case 0:
             productState = "Materials Selected";
+            break;
+          case 1:
+            productState = "Materials shaped";
+            break;
+          case 2:
+            productState = "Guitar built";
+            break;
         }
-
-        console.log("5!!", Number(result[5]));
 
         $("#get-sku").text("SKU: " + result[0]);
         $("#get-upc").text("UPC: " + result[1]);
@@ -203,17 +207,31 @@ App = {
       });
   },
 
-  processItem: function (event) {
+  shapeItem: function (event) {
     event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
-
+    const upc = document.getElementById("upc-state").value;
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
-        return instance.processItem(App.upc, { from: App.metamaskAccountID });
+        return instance.shapeItem(upc, { from: App.metamaskAccountID });
       })
       .then(function (result) {
-        $("#ftc-item").text(result);
+        $("#state").text("State changed");
         console.log("processItem", result);
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  buildItem: function (event) {
+    event.preventDefault();
+    const upc = document.getElementById("upc-state").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.buildItem(upc, { from: App.metamaskAccountID });
+      })
+      .then(function (result) {
+        $("#state").text("State changed");
       })
       .catch(function (err) {
         console.log(err.message);

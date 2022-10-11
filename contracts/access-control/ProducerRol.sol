@@ -29,7 +29,7 @@ contract ProducerRole {
         return producers.has(account);
     }
 
-    // Define a function 'addFarmer' that adds this role
+    // Define a function 'addProducer' that adds this role
     function addProducer(address account) public onlyProducer {
         _addProducer(account);
     }

@@ -52,19 +52,13 @@
     <h2>Product Overview</h2>
     <div class="form-group">
       <br />
-      <!-- <input
-        class="input-field"
-        type="number"
-        id="sku"
-        name="sku"
-        value="1"
-      /> -->
+
       <br />
       ENTER UPC NUMBER
       <br />
       <input type="number" id="upc" name="upc" value="1" /><br />
       <br />
-      <div style="margin: 5px">
+      <div style="margin: 1px">
         <p style="font-style: italic" id="get-sku"></p>
         <p style="font-style: italic" id="get-upc"></p>
         <p style="font-style: italic" id="get-price"></p>
@@ -73,31 +67,28 @@
         <p style="font-style: italic" id="get-state"></p>
       </div>
 
-      <!-- <input
-        type="text"
-        id="ownerID"
-        name="ownerID"
-        value="0x963865f57804b38459dd4b2da2f760211a200438"
-        size="50"
-      /> -->
       <br />
       <div class="button-div">
         <button class="btn-fetchOne" id="button" type="button" data-id="9">
-          Fetch Data 1
+          Fetch Data
         </button>
-        <!-- <button class="btn-fetchTwo" id="button" type="button" data-id="10">
-          Fetch Data 2
-        </button> -->
       </div>
     </div>
 
     <!-- HERE FINISHES SPECIFIC -->
+    <h2>Product State</h2>
 
-    <div id="ftc-harvest">
+    <div id="state-change">
       <div class="form-break"></div>
-      <h2>Farm Details</h2>
       <div class="form-group">
-        Farmer ID
+        <br />
+        ENTER UPC NUMBER
+        <br />
+        <input type="number" id="upc-state" name="upc" value="1" /><br />
+        <br />
+        <p id="state"></p>
+
+        <!-- Farmer ID
         <br />
         <input
           type="text"
@@ -200,8 +191,15 @@
           value="0x5d777e9127b28fb119e81a6304278a0a21bef1c4"
           size="50"
         /><br />
-        <br />
-        <button class="btn-buy" id="button" type="button" data-id="5">
+        <br /> -->
+
+        <button class="btn-shape" id="button" type="button" data-id="2">
+          Shape
+        </button>
+        <button class="btn-shape" id="button" type="button" data-id="3">
+          Build item
+        </button>
+        <!-- <button class="btn-buy" id="button" type="button" data-id="5">
           Buy
         </button>
         <button class="btn-ship" id="button" type="button" data-id="6">
@@ -212,7 +210,7 @@
         </button>
         <button class="btn-purchase" id="button" type="button" data-id="8">
           Purchase
-        </button>
+        </button> -->
       </div>
       <div class="form-break"></div>
       <hr />
