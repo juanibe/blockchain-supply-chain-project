@@ -2,8 +2,10 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 import "../../contracts/access-control/ProducerRol.sol";
+import "../../contracts/access-control/QualityController.sol";
 
-contract SupplyChain is ProducerRole {
+
+contract SupplyChain is ProducerRole, QualityControllerRole {
 
     address owner;
 
@@ -35,7 +37,9 @@ contract SupplyChain is ProducerRole {
         address originProducerID; // Metamask-Ethereum address of the Producer (The producer is the owner)
         string  originProducerName; // Producer Name
         string  originProducerInformation;  // Producer Information
+        
         address qualityControllerID; // Metamask-Ethereum address of the quality controller 
+        
         uint    productId;  // Product ID potentially a combination of upc + sku
         string  productNotes; // Product Notes
         uint    productPrice; // Product Price
@@ -135,6 +139,17 @@ contract SupplyChain is ProducerRole {
         upc = 1;
     }
 
+    function registerProducer(address producerAddress) onlyOwner public returns(bool){
+        addProducer(producerAddress);
+        return true;
+    }
+
+    function registerQualityController(address qualityControllerAddress) onlyOwner public returns(bool){
+        addQualityController(qualityControllerAddress);
+        return true;
+    }
+    
+
     function getItem(uint _upc) public view returns (
         uint sku,
         uint upc,
@@ -157,13 +172,16 @@ contract SupplyChain is ProducerRole {
 
     
 
-    // Define a function 'collectMaterials' that allows a producer to set the state as material collected
+    /* 
+      Define a function 'collectMaterials' that allows a producer to set the state as material collected. 
+      Only a registered producer will be able to collect materials.
+    */
     function collectMaterials(
         string memory _originProducerName, 
         string memory _originProducerInformation, 
         string memory _productNotes,
         uint _price
-        ) onlyOwner payable public 
+        ) onlyProducer payable public 
     {
         
         items[sku] = Item(
@@ -190,16 +208,32 @@ contract SupplyChain is ProducerRole {
     }
 
     /**
+       Shaping the items means to work the wood and different guitar parts in order to be 
+       able to build the guitar.
        Only the producer can shape the item
     */
-    function shapeItem(uint _upc) public areMaterialsSelected(_upc) {
+    function shapeItem(uint _upc) onlyProducer public areMaterialsSelected(_upc) {
+        /* We check that the producer is the owner of the product */
+        require(msg.sender == items[_upc].originProducerID);
         items[_upc].itemState = State.Shaped;
         emit Shaped(_upc);
     }
 
-    function buildItem(uint _upc) public hasBeenShaped(_upc) {
+    /**
+       Only the producer can build the item
+    */
+    function buildItem(uint _upc) onlyProducer public hasBeenShaped(_upc) {
+        require(msg.sender == items[_upc].originProducerID);
         items[_upc].itemState = State.Built;
         emit Built(_upc);
+    }
+
+    /**
+       Only an address with quality control rol can check the item quality.
+    */
+    function controlQuality(uint _upc) onlyQualityController public hasBeenBuilt(_upc) {
+        items[_upc].itemState = State.QualityControlled;
+        emit QualityControlled(_upc);
     }
 }
 
@@ -207,27 +241,28 @@ contract SupplyChain is ProducerRole {
 
 Available Accounts
 ==================
-(0) 0xbDbc2E9338F1F6dB4208086a6B03605D892918F2 (100 ETH)
-(1) 0x9D32ab539fFe375E9b4464bb752Ba4De1C679312 (100 ETH)
-(2) 0xB209DbFd25048000152EcB08372d4dd74b555fFF (100 ETH)
-(3) 0x12a4d32a225D162b67Fa0aC57D74C6990A8BdB0b (100 ETH)
-(4) 0x37B6FC3399D20188713216eaa7658417AC6894A0 (100 ETH)
-(5) 0x542D2a9d571FcdcaF6C67F7F5BE805bE3712edFf (100 ETH)
-(6) 0x3004c6F4E0fff78f91dD6AF2Dc377e6581513cb4 (100 ETH)
-(7) 0x55c1CA09f70EA04d880766f9272A8800Ebc7c8c7 (100 ETH)
-(8) 0xE3Cd428160C7DFE298B934EceA87136f243c4F6d (100 ETH)
-(9) 0xd8Ee6266312E4e8600480dd282544aa51a11d300 (100 ETH)
+(0) 0xe7b90611b4759b3547B9E5Acb3B87156Ea22A0f7 (100 ETH)
+(1) 0x06fd23810F0a1C92Ca147122C0706e5b9A604305 (100 ETH)
+(2) 0x2FAF42eBC4d8FDf7882F2490378770Aae5cCcF29 (100 ETH)
+(3) 0xB51Ca7f2C5E55495C112f6673A079A905A04d42C (100 ETH)
+(4) 0x669ae4E93425Eee715320F0064a6621226a9d7bf (100 ETH)
+(5) 0xF5F2F3EC2117E73ff263323385fFF4beCf492616 (100 ETH)
+(6) 0x9b145a1cDd83e6F64fEc6E5647F7b6d8D4422396 (100 ETH)
+(7) 0x6EA37B979d6bE2530bE172CB00b50A220bABEBcB (100 ETH)
+(8) 0xB380bee2659B967B2f31FcB6Bd868d6E8edC4748 (100 ETH)
+(9) 0xda79d1BA691F2910Cc38AE04FBAcD9d9c65B53bc (100 ETH)
 
 Private Keys
 ==================
-(0) 0x4ab8067fd40ab45218a1f89410a5bb28f2ea5f870f6296c2b0d5a553e5aad8c4
-(1) 0x76ada0724a1ee59014fec8001d4e82455b4f1a089bb56c917380d40c54e91cbc
-(2) 0x23de27b6ef90cc2e9eb302a2358765144a07ce40f5d96d84c7dd3d8c66b95f86
-(3) 0x32f1b7dea14e99f010d5c6b1497b257407801c52404251273e37c76304f5a7b2
-(4) 0x67575b1f700a2b402edbfd62d8c62acd438793df0947d4b003a3e422f0385cd7
-(5) 0x858a55e3edd8221b8a3774883645dad1af52b9b8263d2be0569d43cac82da281
-(6) 0x3a68b8c5095349651546f8920eedeafad68130898a58fde56ad739186b285a72
-(7) 0x0490140f8f10fec45c3973d1657f71296150a9f7c940ab32bf9292691e0eb8fa
-(8) 0xd034c2025fdfe8380afa420773f3c25cc5db94e68ca4fd3529d1a5e3d0d16105
-(9) 0x1ffa941e99e1f9a28a6513b787d7eccd610ad47c611fb781669ad0a45ef53791
+(0) 0xd0ff5b47f5057f30c629821c5dd7558f2074f2ae708101de645cbecbabe24746 => Owner of contract
+(1) 0x5197499a4ef3fb033cd74cd9f0eb5bef4c6b687a7e48a8e3656fc0323d1b2b00 => Producer (Owner of product)
+(2) 0x8cc976b02ef61a8b9d21e998c7ff42e1672e6409f3623e5022fc2b94be3d3d81 => Producer
+(3) 0x4629c60e6ddfabd283eed9856ad5ccffd02e9ac4d203c95b53d98902cfdbc9c4
+(4) 0x95980968d2bcd9a58758549b6f8ea5a312660f51d74043a56bb217b57bf123b1
+(5) 0xa797a91e413ce73177073fa2ec621b518312f5a37a3f8262628853dce4b6e852
+(6) 0x0f23b765895b1a2eafa39e0fbb0fd1f493244a6c338059004dc5be86a29c0f9d
+(7) 0x6ac076a4866a98046c711a677125e425f257e5f8c4e55548d27e2a17acfa71ff
+(8) 0xe71cda93eabe668c1f151a2f2508817d87c1a5d62f049e0ccc14fa633671f996
+(9) 0xd9b38328fabad4a5c3190d01f9a992d05755276f208ae0bfbd4f20f3a0d3444e
+
  */

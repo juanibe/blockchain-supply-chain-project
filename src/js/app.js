@@ -135,7 +135,7 @@ App = {
         return await App.fetchItem(event);
         break;
       case 10:
-        return await App.fetchItemBufferTwo(event);
+        return await App.registerProducer(event);
         break;
     }
   },
@@ -207,6 +207,7 @@ App = {
       });
   },
 
+  /** Shapes an item */
   shapeItem: function (event) {
     event.preventDefault();
     const upc = document.getElementById("upc-state").value;
@@ -223,6 +224,7 @@ App = {
       });
   },
 
+  /** Builds an item */
   buildItem: function (event) {
     event.preventDefault();
     const upc = document.getElementById("upc-state").value;
@@ -232,6 +234,45 @@ App = {
       })
       .then(function (result) {
         $("#state").text("State changed");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  /** Register a producer */
+  registerProducer: function (event) {
+    event.preventDefault();
+    const producerAddress = document.getElementById("producer-address").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.registerProducer(producerAddress, {
+          from: App.metamaskAccountID,
+        });
+      })
+      .then(function (result) {
+        console.log("RESULT", result);
+        $("#register-producer-result").text("Producer registered successfully");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  registerQualityController: function (event) {
+    event.preventDefault();
+    const qualityControllerAddress =
+      document.getElementById("quality-address").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.registerQualityController(qualityControllerAddress, {
+          from: App.metamaskAccountID,
+        });
+      })
+      .then(function (result) {
+        $("#register-quality-result").text(
+          "Quality controller registered successfully"
+        );
       })
       .catch(function (err) {
         console.log(err.message);
