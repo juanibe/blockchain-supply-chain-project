@@ -117,7 +117,7 @@ App = {
         return await App.buildItem(event);
         break;
       case 4:
-        return await App.sellItem(event);
+        return await App.controlQuality(event);
         break;
       case 5:
         return await App.buyItem(event);
@@ -136,6 +136,9 @@ App = {
         break;
       case 10:
         return await App.registerProducer(event);
+        break;
+      case 11:
+        return await App.registerQualityController(event);
         break;
     }
   },
@@ -193,6 +196,9 @@ App = {
           case 2:
             productState = "Guitar built";
             break;
+          case 3:
+            productState = "Quality Controlled";
+            break;
         }
 
         $("#get-sku").text("SKU: " + result[0]);
@@ -231,6 +237,22 @@ App = {
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
         return instance.buildItem(upc, { from: App.metamaskAccountID });
+      })
+      .then(function (result) {
+        $("#state").text("State changed");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  /** Control the quality of the item */
+  controlQuality: function (event) {
+    event.preventDefault();
+    const upc = document.getElementById("upc-state").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.controlQuality(upc, { from: App.metamaskAccountID });
       })
       .then(function (result) {
         $("#state").text("State changed");

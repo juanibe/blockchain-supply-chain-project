@@ -235,6 +235,14 @@ contract SupplyChain is ProducerRole, QualityControllerRole {
         items[_upc].itemState = State.QualityControlled;
         emit QualityControlled(_upc);
     }
+
+    /**
+       Only an address with quality control rol can check the item quality.
+    */
+    function putForSale(uint _upc) onlyProducer public hasBeenControlled(_upc) {
+        items[_upc].itemState = State.ForSale;
+        emit ForSale(_upc);
+    }
 }
 
 /**
@@ -256,7 +264,7 @@ Private Keys
 ==================
 (0) 0xd0ff5b47f5057f30c629821c5dd7558f2074f2ae708101de645cbecbabe24746 => Owner of contract
 (1) 0x5197499a4ef3fb033cd74cd9f0eb5bef4c6b687a7e48a8e3656fc0323d1b2b00 => Producer (Owner of product)
-(2) 0x8cc976b02ef61a8b9d21e998c7ff42e1672e6409f3623e5022fc2b94be3d3d81 => Producer
+(2) 0x8cc976b02ef61a8b9d21e998c7ff42e1672e6409f3623e5022fc2b94be3d3d81 => Quality Controller
 (3) 0x4629c60e6ddfabd283eed9856ad5ccffd02e9ac4d203c95b53d98902cfdbc9c4
 (4) 0x95980968d2bcd9a58758549b6f8ea5a312660f51d74043a56bb217b57bf123b1
 (5) 0xa797a91e413ce73177073fa2ec621b518312f5a37a3f8262628853dce4b6e852

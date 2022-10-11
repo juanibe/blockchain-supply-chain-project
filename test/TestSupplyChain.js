@@ -116,6 +116,24 @@ contract("SupplyChain", function (accounts) {
     assert.equal(itemShaped[5], 3, "Error: Invalid product state");
   });
 
+  it("Testing smart contract function putForSale() that puts the item for sale", async () => {
+    const supplyChain = await SupplyChain.deployed();
+
+    var eventEmitted = false;
+
+    supplyChain.ForSale(null, (error, event) => {
+      eventEmitted = true;
+    });
+
+    const item = await supplyChain.getItem.call(1);
+
+    await supplyChain.putForSale(item[1], { from: accounts[1] });
+
+    const itemShaped = await supplyChain.getItem.call(1);
+
+    assert.equal(itemShaped[5], 4, "Error: Invalid product state");
+  });
+
   //   // 1st Test
   //   it("Testing smart contract function harvestItem() that allows a farmer to harvest coffee", async () => {
   //     const supplyChain = await SupplyChain.deployed();
