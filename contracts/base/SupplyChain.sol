@@ -253,7 +253,6 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
         items[_upc].originProducerID.transfer(items[_upc].productPrice);
         addConsumer(msg.sender);
         emit Sold(_upc);
-
     }
 }
 
