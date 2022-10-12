@@ -157,7 +157,8 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
         uint price,
         string memory productNotes,
         string memory originProducerInformation,
-        State itemState
+        State itemState,
+        address consumerID
     ) 
     {
        Item memory item = items[_upc];
@@ -167,7 +168,8 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
         item.productPrice,
         item.productNotes,
         item.originProducerInformation,
-        item.itemState
+        item.itemState,
+        item.consumerID
        );
     }
 
@@ -251,38 +253,55 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
     function buyGuitar(uint _upc) public isForSale(_upc) paidEnough(items[_upc].productPrice) checkValue(_upc) payable {
         items[_upc].itemState = State.Sold;
         items[_upc].originProducerID.transfer(items[_upc].productPrice);
-        addConsumer(msg.sender);
+        items[_upc].consumerID = payable(msg.sender);
         emit Sold(_upc);
     }
+
+    /**
+        Ships the item to the buyer
+     */
+     function shipItem(uint _upc) onlyProducer public isSold(_upc) {
+        items[_upc].itemState = State.Shipped;
+        emit Shipped(_upc);
+     }
+
+    /**
+        Receive the item
+        Only can be received by the consumer
+     */
+     function receiveItem(uint _upc) public isShipped(_upc) {
+        require(msg.sender == items[_upc].consumerID, 'Only the buyer can receive the item');
+        items[_upc].itemState = State.Received;
+        emit Received(_upc);
+     }
 }
 
 /**
 
 Available Accounts
 ==================
-(0) 0xa699729c4F4fd4Fc2b91808cd90eCa49BC1C2629 (100 ETH)
-(1) 0xc63e01B498fe54B5f5E00f220b918C541b233A0C (100 ETH) => PRODUCER 1
-(2) 0x189FaFC8C5A1BD308C04511c95aaac290ec0Fb05 (100 ETH) => QUALITY
-(3) 0x34990cBB3d155Ede16797e8736ff2a1cE6EceB33 (100 ETH) => CONSUMER
-(4) 0x99Fdd2efDB7B7a631C7e48BcB9714181b0d6aDb8 (100 ETH)
-(5) 0x995fBAa340448155762E1c6261282506b6344e49 (100 ETH)
-(6) 0xacdf1010673A8368cb867CD5DDcF921Ce09Bc4A2 (100 ETH)
-(7) 0x1e6DA1A8Ad426ea5cb037a6CBEc786Bbe0eEaEf0 (100 ETH)
-(8) 0x1febec0687134Dd302E73C1453CB0942D47bf91E (100 ETH)
-(9) 0xfA58d6215A9881F89AfF73C6efC493F5dB9f2F52 (100 ETH)
+(0) 0x895C9F39712Ed04cC9Ed714c34937a4940402d3f (100 ETH)
+(1) 0x188E7c1a1164eb218Eb559C4335edb28758FB73e (100 ETH)
+(2) 0x6DaF442C55B89b58Da204FE13dB5A9F354ef692D (100 ETH)
+(3) 0x4A3F2f78912D35f1eC51074548aE4DAcC81c7B48 (100 ETH)
+(4) 0x0917f5A4d84a2d80faf8ccc43F31870e407cC17D (100 ETH)
+(5) 0xADBA588a5ea3F0A4e6d0577c87155F43919c3f22 (100 ETH)
+(6) 0xf6DA23575304A1a12ef86BfADE6A42297F5f9115 (100 ETH)
+(7) 0x9D2C1258e7E6Df36528726de26F1FfabABF28bd1 (100 ETH)
+(8) 0x1BE2674B44f93816D777098EE94D413fBF686dee (100 ETH)
+(9) 0xbce43f2F995F7Cc4C17c05E6Ec092aed90E14cEf (100 ETH)
 
 Private Keys
 ==================
-(0) 0xcd6c3e49c9eb45ff7b51121a2b0236dd5e3dacd837d1dbe0c2147c91a7d69cdd
-(1) 0xefdbda6c9e1684509d913ac429272b70a9323482790a4a7bf66c29b0513c54a7 => PRODUCER 1
-(2) 0xaf7a8d5f7533889c1a9ba59e75fa38a3e67d9edf66ef565b3419fee9931d2379 => QUALITY
-(3) 0x98574dc21f659c642d118670a0dbe367d559492e154a136672324ad4dbc87235 => CONSUMER
-(4) 0xdd45f850581753b2ea3461c6b8d627910789a57a3d90075d2416d5451e33db4b
-(5) 0x9f109a60253079a83718e17ec8f5a4270490436bd5b50d3d0c632b0fd8439d7e
-(6) 0x663c4b5c593dd5cfd453e40e33f5f6898bc6d208af3fe2903ec8fcd9e3f82c13
-(7) 0xafd20eeb214905402503f9457bf77ae262077662f6b6522c025753170a8e430e
-(8) 0x26b99202a3efcaee3494de60dca57f7f92c1e518d26248f97b4094214ee9383c
-(9) 0xb6792cbc22494ba202b91226351988d470e0827209430ec1cf36ef1b5a46e539
-
+(0) 0x4688141b37d8467a38e87b02f8ddac4656b0ad4d958f81576ff306438be28698
+(1) 0x0200339056d1ad92d41dbce84d096ab90bd682b7390d2b8e0575fd7a74a34c09
+(2) 0xe1d549825c8d85690925788c256e909632c90e4c1eba2b2347c9cef78cb46240
+(3) 0x638ffd1fbacd525bef6d4f979e5683d049aba3df80aee3fc67433b0a94312446
+(4) 0x020f78dd7120d19cae2261b189911512d3b5854dbde170078fd73480eb3d9c0a
+(5) 0xa2589f03f9ac864430f406aa12fbcc596b8b5af2eafbfea4d7341ef09fd80d83
+(6) 0x9cb23331270a043981dd2f902b2b2d8587695e282932ebd339365c0921722b04
+(7) 0xa2f957b99a58b8eeef316e845362e5827578aa685950d53f0ce7521de03ffaaf
+(8) 0xf38169673e6adf04b095f02c03d4a5f451999dfc990b43450d25ee4f829744f6
+(9) 0xb135a0b373b23abf641c63bb44bffaee376afc3a5fdf46d1587ce305fd49110b
 
  */

@@ -126,10 +126,10 @@ App = {
         return await App.buyGuitar(event);
         break;
       case 7:
-        return await App.receiveItem(event);
+        return await App.shipItem(event);
         break;
       case 8:
-        return await App.purchaseItem(event);
+        return await App.receiveItem(event);
         break;
       case 9:
         return await App.fetchItem(event);
@@ -201,6 +201,15 @@ App = {
             break;
           case 4:
             productState = "For sale";
+            break;
+          case 5:
+            productState = "Bought";
+            break;
+          case 6:
+            productState = "Shipped";
+            break;
+          case 7:
+            productState = "Received";
             break;
         }
 
@@ -297,6 +306,41 @@ App = {
       })
       .then(function (result) {
         $("#state").text("Item bought");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  /** Ship the item */
+  shipItem: function (event) {
+    event.preventDefault();
+    const upc = document.getElementById("upc-state").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.shipItem(upc, {
+          from: App.metamaskAccountID,
+        });
+      })
+      .then(function (result) {
+        $("#state").text("Item shipped");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  receiveItem: function (event) {
+    event.preventDefault();
+    const upc = document.getElementById("upc-state").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.receiveItem(upc, {
+          from: App.metamaskAccountID,
+        });
+      })
+      .then(function (result) {
+        $("#state").text("Item received");
       })
       .catch(function (err) {
         console.log(err.message);

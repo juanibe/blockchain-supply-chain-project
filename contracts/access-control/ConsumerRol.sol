@@ -11,7 +11,9 @@ contract ConsumerRole {
 
     Roles.Role private consumers;
 
-    constructor(){}
+    constructor(){
+        _addConsumer(msg.sender);
+    }
 
     modifier onlyConsumer(){
         require (isConsumer(msg.sender));

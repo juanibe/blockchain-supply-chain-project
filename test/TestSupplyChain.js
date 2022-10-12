@@ -9,7 +9,7 @@ contract("SupplyChain", function (accounts) {
   const originProducerName = "John Doe";
   const originProducerInformation = "Yarray Valley";
   const productNotes = "Best wood for Guitar";
-  const productPrice = web3.utils.toWei(String(1), "ether");
+  const productPrice = web3.utils.toWei(String(10), "ether");
   var itemState = 0;
   // const consumerID = "0x00000000000000000000000000000000000000";
   const consumerID = "0x0000000000000000000000000000000000000000";
@@ -142,11 +142,23 @@ contract("SupplyChain", function (accounts) {
 
     const item = await supplyChain.getItem.call(1);
 
+    let previousBalance = await web3.eth.getBalance(accounts[3]);
+
     await supplyChain.buyGuitar(item[1], { from: accounts[3], value: item[2] });
+
+    let currentBalance = await web3.eth.getBalance(accounts[3]);
 
     const itemSold = await supplyChain.getItem.call(1);
 
     assert.equal(itemSold[5], 5, "Error: Invalid product state");
+    assert.equal(itemSold[6], accounts[3], "Invalid consumer address");
+
+    // Failing because of types
+    // assert.equal(
+    //   currentBalance,
+    //   previousBalance - productPrice,
+    //   "Error: Balance does not match"
+    // );
   });
 
   //   // 1st Test
