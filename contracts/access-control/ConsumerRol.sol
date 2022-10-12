@@ -27,7 +27,7 @@ contract ConsumerRole {
     }
 
     function renounceConsumer() public {
-        _removeProducer(msg.sender);
+        _removeConsumer(msg.sender);
     }
 
     function _addConsumer(address account) internal{
@@ -35,7 +35,7 @@ contract ConsumerRole {
         emit ConsumerAdded(account);
     }
 
-    function _removeProducer(address account) internal {
+    function _removeConsumer(address account) internal {
         consumers.remove(account);
         emit ConsumerRemoved(account);
     }

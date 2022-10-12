@@ -120,10 +120,10 @@ App = {
         return await App.controlQuality(event);
         break;
       case 5:
-        return await App.buyItem(event);
+        return await App.putForSale(event);
         break;
       case 6:
-        return await App.shipItem(event);
+        return await App.buyGuitar(event);
         break;
       case 7:
         return await App.receiveItem(event);
@@ -199,6 +199,9 @@ App = {
           case 3:
             productState = "Quality Controlled";
             break;
+          case 4:
+            productState = "For sale";
+            break;
         }
 
         $("#get-sku").text("SKU: " + result[0]);
@@ -256,6 +259,44 @@ App = {
       })
       .then(function (result) {
         $("#state").text("State changed");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  /** Put item on sale */
+  putForSale: function (event) {
+    event.preventDefault();
+    const upc = document.getElementById("upc-state").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.putForSale(upc, { from: App.metamaskAccountID });
+      })
+      .then(function (result) {
+        $("#state").text("State changed");
+      })
+      .catch(function (err) {
+        console.log(err.message);
+      });
+  },
+
+  /** Buy the item */
+  buyGuitar: function (event) {
+    event.preventDefault();
+    const upc = document.getElementById("upc-state").value;
+    App.contracts.SupplyChain.deployed()
+      .then(function (instance) {
+        return instance.getItem(upc).then(function (result) {
+          console.log(result, "ITEM");
+          return instance.buyGuitar(upc, {
+            from: App.metamaskAccountID,
+            value: result[2], //web3.toWei(result[2], "ether"),
+          });
+        });
+      })
+      .then(function (result) {
+        $("#state").text("Item bought");
       })
       .catch(function (err) {
         console.log(err.message);
