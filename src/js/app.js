@@ -388,7 +388,6 @@ App = {
 
   packItem: function (event) {
     event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
@@ -405,7 +404,6 @@ App = {
 
   sellItem: function (event) {
     event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
@@ -426,7 +424,6 @@ App = {
 
   buyItem: function (event) {
     event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
@@ -447,7 +444,6 @@ App = {
 
   shipItem: function (event) {
     event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
@@ -464,7 +460,6 @@ App = {
 
   receiveItem: function (event) {
     event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
 
     App.contracts.SupplyChain.deployed()
       .then(function (instance) {
@@ -473,59 +468,6 @@ App = {
       .then(function (result) {
         $("#ftc-item").text(result);
         console.log("receiveItem", result);
-      })
-      .catch(function (err) {
-        console.log(err.message);
-      });
-  },
-
-  purchaseItem: function (event) {
-    event.preventDefault();
-    var processId = parseInt($(event.target).data("id"));
-
-    App.contracts.SupplyChain.deployed()
-      .then(function (instance) {
-        return instance.purchaseItem(App.upc, { from: App.metamaskAccountID });
-      })
-      .then(function (result) {
-        $("#ftc-item").text(result);
-        console.log("purchaseItem", result);
-      })
-      .catch(function (err) {
-        console.log(err.message);
-      });
-  },
-
-  fetchItemBufferOne: function () {
-    ///   event.preventDefault();
-    ///    var processId = parseInt($(event.target).data('id'));
-    App.upc = $("#upc").val();
-    console.log("upc", App.upc);
-
-    App.contracts.SupplyChain.deployed()
-      .then(function (instance) {
-        return instance.fetchItemBufferOne(App.upc);
-      })
-      .then(function (result) {
-        $("#ftc-item").text(result);
-        console.log("fetchItemBufferOne", result);
-      })
-      .catch(function (err) {
-        console.log(err.message);
-      });
-  },
-
-  fetchItemBufferTwo: function () {
-    ///    event.preventDefault();
-    ///    var processId = parseInt($(event.target).data('id'));
-
-    App.contracts.SupplyChain.deployed()
-      .then(function (instance) {
-        return instance.fetchItemBufferTwo.call(App.upc);
-      })
-      .then(function (result) {
-        $("#ftc-item").text(result);
-        console.log("fetchItemBufferTwo", result);
       })
       .catch(function (err) {
         console.log(err.message);
