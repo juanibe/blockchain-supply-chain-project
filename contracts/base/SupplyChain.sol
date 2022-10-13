@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
+import "../../contracts/access-control/Ownable.sol";
 import "../../contracts/access-control/ProducerRol.sol";
 import "../../contracts/access-control/QualityController.sol";
-import "../../contracts/access-control/ConsumerRol.sol";
 
 
-contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
+contract SupplyChain is Ownable, ProducerRole, QualityControllerRole {
 
-    address owner;
+    // address owner;
 
     // Define a variable called 'upc' for Universal Product Code (UPC)
     uint upc;
@@ -34,13 +34,10 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
     struct Item {
         uint    sku;  // Stock Keeping Unit (SKU)
         uint    upc;
-        //address ownerID;  // Metamask-Ethereum address of the current owner 
         address payable originProducerID; // Metamask-Ethereum address of the Producer (The producer is the owner)
         string  originProducerName; // Producer Name
         string  originProducerInformation;  // Producer Information
-        
         address qualityControllerID; // Metamask-Ethereum address of the quality controller 
-        
         uint    productId;  // Product ID potentially a combination of upc + sku
         string  productNotes; // Product Notes
         uint    productPrice; // Product Price
@@ -60,10 +57,10 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
         event Purchased(uint upc);
 
 
-    modifier onlyOwner() {
-        require(msg.sender == owner);
-        _;
-    }
+    // modifier onlyOwner() {
+    //     require(msg.sender == owner);
+    //     _;
+    // }
 
       // Define a modifer that verifies the Caller
     modifier verifyCaller (address _address) {
@@ -135,7 +132,7 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
     // In the constructor set 'owner' to the address that instantiated the contract
     // and set 'sku' and 'upc' to 1
     constructor(){
-        owner = msg.sender;
+        // owner = msg.sender;
         sku = 1;
         upc = 1;
     }
@@ -191,7 +188,6 @@ contract SupplyChain is ProducerRole, QualityControllerRole, ConsumerRole {
             {
                 sku: sku, 
                 upc: upc,
-                //ownerID: msg.sender, 
                 originProducerID: payable(msg.sender), 
                 originProducerName: _originProducerName, 
                 originProducerInformation: _originProducerInformation, 
