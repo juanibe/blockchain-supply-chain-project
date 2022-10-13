@@ -1,1 +1,4 @@
 build/contracts
+.env
+.secret
+node_modules
