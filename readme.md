@@ -14,7 +14,15 @@ Descentralized application to track item creation and selling process
 
 # Contract address (Sepolia)
 
-https://sepolia.etherscan.io/address/0x347c725ce46f3ce7a2211CDDc4AE1e1316d9e355#code
+## 0x347c725ce46f3ce7a2211CDDc4AE1e1316d9e355#code
+
+# Transaction Id
+
+## 0x495873ed28e19ae35c54ee9b38d36f970a8e5f3a52f6bfeaec246ec90f718606
+
+# Etherscan
+
+### https://sepolia.etherscan.io/address/0x347c725ce46f3ce7a2211CDDc4AE1e1316d9e355
 
 # Project requirements
 
